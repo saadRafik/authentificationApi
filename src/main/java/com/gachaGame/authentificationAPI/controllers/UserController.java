@@ -1,5 +1,7 @@
 package com.gachaGame.authentificationAPI.controllers;
 
+import com.gachaGame.authentificationAPI.domain.UpdatePasswordRequestDto;
+import com.gachaGame.authentificationAPI.domain.UserRequestDto;
 import com.gachaGame.authentificationAPI.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,14 +18,14 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> createUser(@RequestBody Map<String, String> userData) {
-        String result = userService.createUser(userData.get("username"), userData.get("password"));
+    public ResponseEntity<?> createUser(@RequestBody UserRequestDto userData) {
+        String result = userService.createUser(userData.getUsername(), userData.getPassword());
         return ResponseEntity.ok(Map.of("message", result));
     }
 
     @PutMapping("/update-password")
-    public ResponseEntity<?> updatePassword(@RequestBody Map<String, String> userData) {
-        String result = userService.updatePassword(userData.get("username"), userData.get("oldPassword"), userData.get("newPassword"));
+    public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordRequestDto userData) {
+        String result = userService.updatePassword(userData.getUsername(), userData.getOldPassword(), userData.getNewPassword());
         return ResponseEntity.ok(Map.of("message", result));
     }
 
