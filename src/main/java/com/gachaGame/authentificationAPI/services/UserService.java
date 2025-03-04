@@ -4,7 +4,10 @@ import com.gachaGame.authentificationAPI.dataAccess.*;
 import com.gachaGame.authentificationAPI.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -17,15 +20,26 @@ public class UserService {
         this.tokenRepository = tokenRepository;
     }
 
+    public List<UserRequestDto> getAll() {
+
+        return userRepository.findAll().stream()
+                .map(user -> new UserRequestDto(user.getUsername(), user.getPassword()))
+                .collect(Collectors.toList());
+    }
+
+
+
     public String createUser(String username, String password) {
         if (userRepository.findByUsername(username).isPresent()) {
-            return "Nom d'utilisateur déjà pris";
+
+            return String.format("Nom d'utilisateur %s déjà pris", username != null ? username : "inconnu");
         }
         User user = new User();
         user.setUsername(username);
         user.setPassword(password);
         userRepository.save(user);
-        return "Utilisateur créé avec succès";
+
+        return  String.format("Utilisateur %s avec succès", username != null ? username : "inconnu");
     }
 
     public String updatePassword(String username, String oldPassword, String newPassword) {
@@ -42,8 +56,10 @@ public class UserService {
             userRepository.save(user);
             return "Mot de passe mis à jour";
         }
-        return "Utilisateur non trouvé";
+
+        return String.format("Utilisateur %s non trouvé", username != null ? username : "inconnu");
     }
+
 
     @Transactional
     public String deleteUser(String username, String password) {
@@ -58,8 +74,10 @@ public class UserService {
 
             tokenRepository.deleteByUsername(username);
             userRepository.delete(user);
-            return "Utilisateur supprimé";
+
+            return String.format("Utilisateur %s supprimé", username != null ? username : "inconnu");
         }
-        return "Utilisateur non trouvé";
+
+        return String.format("Utilisateur %s non trouvé", username != null ? username : "inconnu");
     }
 }

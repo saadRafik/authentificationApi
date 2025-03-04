@@ -5,6 +5,7 @@ import com.gachaGame.authentificationAPI.domain.UserRequestDto;
 import com.gachaGame.authentificationAPI.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -17,9 +18,16 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/all")
+    public List<UserRequestDto> getAllUsers(){
+
+        return userService.getAll();
+    }
+
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody UserRequestDto userData) {
         String result = userService.createUser(userData.getUsername(), userData.getPassword());
+
         return ResponseEntity.ok(Map.of("message", result));
     }
 
@@ -27,11 +35,13 @@ public class UserController {
     public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordRequestDto userData) {
         String result = userService.updatePassword(userData.getUsername(), userData.getOldPassword(), userData.getNewPassword());
         return ResponseEntity.ok(Map.of("message", result));
+
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<?> deleteUser(@RequestBody Map<String, String> userData) {
-        String result = userService.deleteUser(userData.get("username"), userData.get("password"));
+    public ResponseEntity<?> deleteUser(@RequestBody UserRequestDto userData) {
+        String result = userService.deleteUser(userData.getUsername(), userData.getPassword());
+
         return ResponseEntity.ok(Map.of("message", result));
     }
 }
