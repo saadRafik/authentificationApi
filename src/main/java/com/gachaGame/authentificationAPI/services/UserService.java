@@ -27,8 +27,6 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-
-
     public String createUser(String username, String password) {
         if (userRepository.findByUsername(username).isPresent()) {
 
@@ -39,7 +37,7 @@ public class UserService {
         user.setPassword(password);
         userRepository.save(user);
 
-        return  String.format("Utilisateur %s avec succès", username != null ? username : "inconnu");
+        return  String.format("Utilisateur %s crée avec succès", username != null ? username : "inconnu");
     }
 
     public String updatePassword(String username, String oldPassword, String newPassword) {
