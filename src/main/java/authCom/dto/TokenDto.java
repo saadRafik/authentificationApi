@@ -1,4 +1,4 @@
-package com.gachaGame.authentificationAPI.domain;
+package authCom.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

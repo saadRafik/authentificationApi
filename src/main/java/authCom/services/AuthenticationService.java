@@ -1,8 +1,13 @@
-package com.gachaGame.authentificationAPI.services;
+package authCom.services;
 
-import com.gachaGame.authentificationAPI.dataAccess.*;
-import com.gachaGame.authentificationAPI.domain.*;
+import authCom.dataAccess.TokenRepository;
+import authCom.dataAccess.UserRepository;
+import authCom.domain.Token;
+import authCom.domain.User;
+import authCom.dto.ApiResponseDto;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Optional;
@@ -19,11 +24,10 @@ public class AuthenticationService {
         this.userRepository = userRepository;
     }
 
-    public String generateToken(String username, String password) {
+    public ResponseEntity<ApiResponseDto> generateToken(String username, String password) {
         Optional<User> userOpt = userRepository.findByUsername(username);
 
-        if (userOpt.isPresent()
-                && userOpt.get().getPassword().equals(password)) {
+        if (userOpt.isPresent() && userOpt.get().getPassword().equals(password)) {
             String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy/MM/dd-HH:mm:ss"));
             String tokenValue = username + "-" + timestamp + "-" + UUID.randomUUID();
 
@@ -33,9 +37,10 @@ public class AuthenticationService {
             token.setExpirationDate(LocalDateTime.now().plusHours(1));
 
             tokenRepository.save(token);
-            return tokenValue;
+
+            return ResponseEntity.ok(new ApiResponseDto("Token created successfully", 200));
         }
-        return "Identifiants incorrects";
+        return ResponseEntity.status(401).body(new ApiResponseDto("Identifiants incorrects", 401));
     }
 
     public String validateToken(String token) {
@@ -48,6 +53,7 @@ public class AuthenticationService {
                 tokenRepository.save(existingToken);
                 return existingToken.getUsername();
             } else {
+                tokenRepository.delete(existingToken); // Remove expired token
                 return "Token expiré";
             }
         }

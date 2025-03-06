@@ -1,8 +1,9 @@
-package com.gachaGame.authentificationAPI.dataAccess;
+package authCom.dataAccess;
 
-import com.gachaGame.authentificationAPI.domain.User;
+import authCom.domain.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
+
 import java.util.Optional;
 
 @Repository

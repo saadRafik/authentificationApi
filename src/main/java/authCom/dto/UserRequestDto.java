@@ -1,4 +1,4 @@
-package com.gachaGame.authentificationAPI.domain;
+package authCom.dto;
 
 import lombok.Getter;
 import lombok.Setter;

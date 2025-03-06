@@ -1,7 +1,9 @@
-package com.gachaGame.authentificationAPI.services;
+package authCom.services;
 
-import com.gachaGame.authentificationAPI.dataAccess.*;
-import com.gachaGame.authentificationAPI.domain.*;
+import authCom.dataAccess.TokenRepository;
+import authCom.dataAccess.UserRepository;
+import authCom.domain.User;
+import authCom.dto.UserRequestDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,7 +39,7 @@ public class UserService {
         user.setPassword(password);
         userRepository.save(user);
 
-        return  String.format("Utilisateur %s crée avec succès", username != null ? username : "inconnu");
+        return String.format("Utilisateur %s crée avec succès", username != null ? username : "inconnu");
     }
 
     public String updatePassword(String username, String oldPassword, String newPassword) {

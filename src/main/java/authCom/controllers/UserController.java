@@ -1,10 +1,11 @@
-package com.gachaGame.authentificationAPI.controllers;
+package authCom.controllers;
 
-import com.gachaGame.authentificationAPI.domain.UpdatePasswordRequestDto;
-import com.gachaGame.authentificationAPI.domain.UserRequestDto;
-import com.gachaGame.authentificationAPI.services.UserService;
+import authCom.dto.UpdatePasswordRequestDto;
+import authCom.dto.UserRequestDto;
+import authCom.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.Map;
 
@@ -19,28 +20,34 @@ public class UserController {
     }
 
     @GetMapping("/all")
-    public List<UserRequestDto> getAllUsers(){
-
-        return userService.getAll();
+    public ResponseEntity<List<UserRequestDto>> getAllUsers() {
+        return ResponseEntity.ok(userService.getAll());
     }
 
     @PostMapping("/create")
     public ResponseEntity<?> createUser(@RequestBody UserRequestDto userData) {
         String result = userService.createUser(userData.getUsername(), userData.getPassword());
-
         return ResponseEntity.ok(Map.of("message", result));
     }
 
     @PutMapping("/update-password")
     public ResponseEntity<?> updatePassword(@RequestBody UpdatePasswordRequestDto userData) {
         String result = userService.updatePassword(userData.getUsername(), userData.getOldPassword(), userData.getNewPassword());
-        return ResponseEntity.ok(Map.of("message", result));
 
+        if (result.equals("Ancien mot de passe incorrect")) {
+            return ResponseEntity.status(400).body(Map.of("error", result));
+        }
+
+        return ResponseEntity.ok(Map.of("message", result));
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<?> deleteUser(@RequestBody UserRequestDto userData) {
         String result = userService.deleteUser(userData.getUsername(), userData.getPassword());
+
+        if (result.contains("non trouvé")) {
+            return ResponseEntity.status(404).body(Map.of("error", result));
+        }
 
         return ResponseEntity.ok(Map.of("message", result));
     }
