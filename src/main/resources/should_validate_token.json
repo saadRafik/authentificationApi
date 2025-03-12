@@ -1,0 +1,5 @@
+{
+  "token": "valid-test-token-123",
+  "username": "validUser",
+  "expirationDate": "2099-12-31T23:59:59"
+}

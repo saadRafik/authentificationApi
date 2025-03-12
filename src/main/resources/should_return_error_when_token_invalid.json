@@ -1,0 +1,5 @@
+{
+  "token": "expired-test-token-456",
+  "username": "expiredUser",
+  "expirationDate": "2020-01-01T00:00:00"
+}

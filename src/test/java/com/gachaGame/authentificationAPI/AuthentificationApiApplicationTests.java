@@ -11,3 +11,7 @@ class AuthentificationApiApplicationTests {
 	}
 
 }
+
+
+// resources --> JSON
+//  Java file : Should_Generate_Token
